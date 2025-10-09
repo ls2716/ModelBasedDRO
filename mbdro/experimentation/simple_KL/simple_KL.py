@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Increase the default font size for matplotlib
-plt.rcParams.update({"font.size": 14})
+plt.rcParams.update({"font.size": 18})
 
 def evaluate_robust_profit(policy, actions, delta):
     """
@@ -155,10 +155,10 @@ if __name__ == "__main__":
 
 
     # Plot the results
-    plt.figure(figsize=(10, 6))
-    plt.title("$V^{DRO}$ vs $\\delta$")
-    plt.xlabel("$\\delta$")
-    plt.ylabel("Profit")
+    plt.figure(figsize=(8, 5))
+    # plt.title("$V^{DRO}$ vs $\\delta$")
+    plt.xlabel("Optimisation Radius $\\delta_{train}$")
+    plt.ylabel("Objective")
     plt.plot(
         delta_arr,
         standard_profits_standard,
@@ -186,8 +186,11 @@ if __name__ == "__main__":
     plt.legend()
     # Add grid lines with minor ticks
     plt.grid(which='both', linestyle='--', linewidth=0.5)
-    plt.minorticks_on()
-    plt.savefig("robust_profit.png")
+    # plt.minorticks_on()
+    xticks = np.arange(0, 0.023, 0.005)
+    plt.xticks(xticks)
+    plt.tight_layout()
+    plt.savefig("simple_KL_robust_profit.png", dpi=300)
     plt.show()
     plt.close()
         

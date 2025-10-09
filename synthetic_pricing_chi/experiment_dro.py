@@ -24,10 +24,8 @@ Output:
 
 import numpy as np
 import torch
-import pickle
-import os
 
-import mbdro.optimisation_mb.dro_KL_mb as dro_KL_mb
+import mbdro.optimisation_mb.dro_xi_mb as dro_xi_mb
 import mbdro.optimisation_mb.standard_mb as standard_mb
 import mbdro.optimisation_mb.learn_conversion as mb_conversion
 
@@ -73,7 +71,7 @@ def run_single(
 
     optimised_robust_prices_mb = []
     for delta_mb in delta_mb_arr:
-        robust_price_mb = dro_KL_mb.optimise_robust_price(
+        robust_price_mb = dro_xi_mb.optimise_robust_price(
             acceptance_model=mb_acceptance_model,
             initial_price=optimised_price_mb,
             delta=delta_mb,
@@ -99,7 +97,7 @@ def run_single(
                     mb_acceptance_model,
                 )
             else:
-                r_profit = dro_KL_mb.evaluate_robust_profit(
+                r_profit = dro_xi_mb.evaluate_robust_profit(
                     optimised_robust_price_mb,
                     mb_acceptance_model,
                     delta=delta,
@@ -116,7 +114,7 @@ def run_single(
                 mb_acceptance_model,
             )
         else:
-            r_profit = dro_KL_mb.evaluate_robust_profit(
+            r_profit = dro_xi_mb.evaluate_robust_profit(
                 optimised_price_mb,
                 mb_acceptance_model,
                 delta=delta,
@@ -125,7 +123,7 @@ def run_single(
     robust_profits_standard = np.array(robust_profits_standard).flatten()
 
     # Plot the results
-    plot_path = f"plots/experiment_dro_kl_alpha_{alpha}_beta_{beta}.png"
+    plot_path = f"plots/experiment_dro_chi_alpha_{alpha}_beta_{beta}.png"
 
     plt.figure(figsize=(8, 5))
     # plt.title("$V^{DRO}$ vs $\\delta_{eval}$")
@@ -147,23 +145,20 @@ def run_single(
         )
     plt.legend()
     # Add grid with minor ticks
-    plt.grid(True, which='both', linestyle='--', linewidth=0.5)
-    # Major grid lines should be solid and darker grey
-    plt.grid(True, which='major', linestyle='-', linewidth=1, color='grey')
+    plt.grid(which="both", linestyle="--", linewidth=0.5)
     plt.minorticks_on()
     plt.tight_layout()
     plt.savefig(plot_path, dpi=300)
     plt.show()
     plt.close()
 
-
 if __name__ == "__main__":
     seed = 0
     # Parameters for the experiment
     alpha = -15
-    beta = 0.0
+    beta = 0.1
 
-    delta_mb_arr = [0.002,  0.01, 0.05, 0.1]
+    delta_mb_arr = [0.002, 0.01, 0.05, 0.1]
 
     configuration = {
         "alpha": alpha,

@@ -59,5 +59,5 @@ if __name__ == "__main__":
     plt.grid(True, which='major', linestyle='-', linewidth=1, color='grey')
     plt.minorticks_on()
     plt.tight_layout()
-    plt.savefig(f"seed_{seed}/profit_vs_delta_KL.png", dpi=300)
+    plt.savefig(f"seed_{seed}/profit_vs_delta_chi.png", dpi=300)
     plt.show()

@@ -5,17 +5,20 @@ import torch
 import os
 import numpy as np
 
+
 from learn_conversion import train_model, get_conversion_model
 from standard_optimisation import optimise_standard
 from dro import optimise_robust
 
 
 
+
 def train_logistic_model(data, seed, ratio):
+    # Train a test and test model on the given data and save it.
     # Set the random seed for reproducibility
     torch.manual_seed(seed)
     np.random.seed(seed)
-    # Train a test and test model on the given data and save it.
+
     train_data = data.sample(frac=ratio, random_state=seed)
     test_data = data.drop(train_data.index)
 
@@ -109,11 +112,9 @@ def optimise_robust_prices_tocsv(data, seed, delta, ratio, recreate_results=Fals
 
 def run_seed(seed, data, deltas, ratio, recreate_results=False):
     """Run the analysis for a given seed."""
-
     # Set the random seed for reproducibility
     torch.manual_seed(seed)
     np.random.seed(seed)
-
     # Create a directory for the seed if it doesn't exist
     if not os.path.exists(f"ratio_{ratio}/seed_{seed}"):
         os.makedirs(f"ratio_{ratio}/seed_{seed}")
@@ -134,6 +135,7 @@ if __name__ == "__main__":
     # Specify train data split ratio
     ratio = 0.1  # 50% of the data will be used for training, 50% for testing
 
+    # Specify seeds
     seeds = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]  # 10 seeds for robustness
 
     # Specify the delta for robust optimisation

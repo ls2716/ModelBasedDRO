@@ -1,6 +1,5 @@
 from policy import NeuralNetworkPolicy
 import torch
-import pandas as pd
 import numpy as np
 
 from generate_data import generate_data

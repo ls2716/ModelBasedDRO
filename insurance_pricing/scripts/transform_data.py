@@ -4,7 +4,7 @@ One hot encode the categorical variables in the dataset.
 Scale the dataset using the MinMaxScaler.
 """
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MaxAbsScaler, MinMaxScaler
 from utils import OH_df
 
 # Load the data
@@ -19,7 +19,7 @@ price = data["Price"]
 customer_id = data["cust_id"]
 
 # Scale the data
-scaler = MinMaxScaler()
+scaler = MaxAbsScaler()
 
 data = pd.DataFrame(scaler.fit_transform(data), columns=data.columns)
 

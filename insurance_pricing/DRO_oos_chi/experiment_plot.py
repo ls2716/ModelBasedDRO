@@ -15,7 +15,7 @@ if __name__=="__main__":
     ratio = 0.1
     
     seeds = list(range(0,20)) 
-    
+
     deltas = [0, 0.001, 0.002, 0.003, 0.005, 0.01, 0.05]#, 0.1]
     prices_to_evaluate = [
         "standard",
@@ -61,6 +61,6 @@ if __name__=="__main__":
     # plt.legend(loc='upper right')
     plt.tight_layout()
     # Save the plot
-    plt.savefig(f'ratio_{ratio}/ratio_{ratio}_mean_profit_vs_delta_kl.png', dpi=300)
+    plt.savefig(f'ratio_{ratio}/ratio_{ratio}_mean_profit_vs_delta_chi.png', dpi=300)
     plt.show()
     print(f"Plot saved as 'ratio_{ratio}/ratio_{ratio}_mean_profit_vs_delta.png'.")
