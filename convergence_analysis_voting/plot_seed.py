@@ -45,6 +45,8 @@ def plot_mean_convergence(
         std_data_rewards (list): List of standard deviations for data rewards.
         std_true_rewards (list): List of standard deviations for true rewards.
     """
+    if seed is None:
+        raise ValueError("Seed must be provided for convergence plot.")
     plt.figure(figsize=(8, 6))
     plt.plot(n_samples_arr, mean_model_rewards, label="Parametric evaluation")
     plt.fill_between(
@@ -81,10 +83,7 @@ def plot_mean_convergence(
     if file_path is not None:
         if not os.path.exists(file_path):
             os.makedirs(file_path)
-        if seed is not None:
-            plt.savefig(os.path.join(file_path, f"mean_convergence_seed_{seed}.png"))
-        else:
-            plt.savefig(os.path.join(file_path, "mean_convergence.png"))
+        plt.savefig(os.path.join(file_path, f"mean_convergence_seed_{seed}.png"))
     # plt.show()
     plt.close()
 
@@ -113,6 +112,8 @@ def plot_mean_dro_convergence(
         std_data_dro_rewards (list): List of standard deviations for data DRO rewards.
         std_true_dro_rewards (list): List of standard deviations for true DRO rewards.
     """
+    if seed is None:
+        raise ValueError("Seed must be provided for DRO convergence plot.")
     plt.figure(figsize=(8, 6))
     plt.plot(n_samples_arr, mean_model_dro_rewards, label="Parametric evaluation")
     plt.fill_between(
@@ -138,8 +139,8 @@ def plot_mean_dro_convergence(
     plt.axhline(
         y=true_dro_reward, color="r", linestyle="--", label="True DRO objective"
     )
-    plt.xlabel("Number of Samples")
-    plt.ylabel("Mean Reward")
+    plt.xlabel("Number of samples")
+    plt.ylabel("Mean reward")
     plt.title("Convergence of DRO objective")
     plt.legend()
     plt.xscale("log")
@@ -149,10 +150,7 @@ def plot_mean_dro_convergence(
     if file_path is not None:
         if not os.path.exists(file_path):
             os.makedirs(file_path)
-        if seed is not None:
-            plt.savefig(os.path.join(file_path, f"mean_dro_convergence_seed_{seed}.png"))
-        else:
-            plt.savefig(os.path.join(file_path, "mean_dro_convergence.png"))
+        plt.savefig(os.path.join(file_path, f"mean_dro_convergence_seed_{seed}.png"))
     plt.close()
 
 
@@ -162,7 +160,7 @@ if __name__ == "__main__":
 
     result_path = "results_dro"
 
-    seeds = [1, 2, 3]
+    seeds = [1,2,3]
 
     # Initialize a dictionary to store the results
     seed_dict = {}

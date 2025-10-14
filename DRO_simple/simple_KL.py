@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Increase the default font size for matplotlib
-plt.rcParams.update({"font.size": 18})
+plt.rcParams.update({"font.size": 16})
 
 def evaluate_robust_profit(policy, actions, delta):
     """

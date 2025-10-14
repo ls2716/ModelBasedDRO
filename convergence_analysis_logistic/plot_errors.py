@@ -29,12 +29,12 @@ def plot_errors(num_samples_arr, mean_dro_error_data, mean_dro_error_mb, beta):
         beta (float): Beta value for the experiment.
     """
     # Plot on a normal scale
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(8, 5))
     plt.plot(num_samples_arr, mean_dro_error_data, label="Data-based evaluation", marker="o")
     plt.plot(num_samples_arr, mean_dro_error_mb, label="Parametric evaluation", marker="o")
     plt.xlabel("Number of samples")
     plt.ylabel("Mean $l_\\infty$ error")
-    plt.title(f"$l_\\infty$ error in evaluation for \\beta = {beta}")
+    # plt.title(f"$l_\\infty$ error in DRO evaluation for \\beta = {beta}")
     plt.grid(which='both', linestyle='--', linewidth=0.5)
     plt.minorticks_on()
     plt.legend()
@@ -43,14 +43,14 @@ def plot_errors(num_samples_arr, mean_dro_error_data, mean_dro_error_mb, beta):
     plt.close()
 
     # Plot on a log scale
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(7, 5))
     plt.plot(num_samples_arr, mean_dro_error_data, label="Data-based evaluation", marker="o")
     plt.plot(num_samples_arr, mean_dro_error_mb, label="Parametric evaluation", marker="o") 
     plt.xscale("log")
     plt.yscale("log")
     plt.xlabel("Number of samples")
     plt.ylabel("Mean $l_\\infty$ error")
-    plt.title(f"$l_\\infty$ error in evaluation for \\beta = {beta}")
+    # plt.title(f"$l_\\infty$ error in DRO evaluation for \\beta = {beta}")
     # Add grid lines with both major and minor ticks
     plt.grid(which='both', linestyle='--', linewidth=0.5)
     plt.minorticks_on()
@@ -61,7 +61,7 @@ def plot_errors(num_samples_arr, mean_dro_error_data, mean_dro_error_mb, beta):
 
 if __name__ == "__main__":
     alpha = -15
-    beta = 0.3
+    beta = 0.5
     no_points = 10
     delta = 0.1
 
@@ -83,8 +83,8 @@ if __name__ == "__main__":
     # Compute l_infty errors for the evaluation for each number of samples
     for num_samples in num_samples_arr:
         profits_dro = results[num_samples]["profits_dro"]
-        mb_profits_action_space = results[num_samples]["mb_profits_action_space"]
-        true_profits_action_space = results[num_samples]["true_profits_action_space"]
+        mb_profits_action_space = results[num_samples]["mb_profits_dro_action_space"]
+        true_profits_action_space = results[num_samples]["true_dro_profits_action_space"]
         # Convert to numpy arrays
         profits_dro = np.array(profits_dro)
         mb_profits_action_space = np.array(mb_profits_action_space)

@@ -5,7 +5,7 @@ import json
 import os
 
 # Increase the font size for better readability
-plt.rcParams.update({"font.size": 14})
+plt.rcParams.update({"font.size": 16})
 
 def plot_results(results, delta_arr, delta_to_plot):
     """
@@ -31,28 +31,30 @@ def plot_results(results, delta_arr, delta_to_plot):
     plt.ylabel("Optimal Order Quantity")
     plt.grid()
     plt.savefig("plots/optimal_order_quantities.png")
-    plt.show()
+    plt.close()
 
     # Plot the dro rewards
-    plt.figure(figsize=(10, 5))
+    plt.figure(figsize=(9, 5))
     # Plot the rewards for the standard order quantity
     dro_rewards_standard = [dro_rewards[str(delta)]["0"] for delta in delta_arr]
-    plt.plot(delta_arr, dro_rewards_standard, marker="o", label="$V^{DRO,\\delta}(q^{s})$")
+    plt.plot(delta_arr, dro_rewards_standard, marker="o", label="Standard (non-robust)")
     for delta_opt in delta_to_plot:
         dro_rewards_delta_opt = [
             dro_rewards[str(delta)]["{}".format(delta_opt)] for delta in delta_arr
         ]
-        plt.plot(delta_arr, dro_rewards_delta_opt, marker="o", label="$V^{DRO,\\delta}(q^{DRO,\\varepsilon})$ for" + f"$\\varepsilon={delta_opt}$")
+        plt.plot(delta_arr, dro_rewards_delta_opt, marker="o", label="$\\delta_{train}=$" + f"{delta_opt:.3f}")
 
-    plt.title("$V^{DRO,\\delta}$ vs $\\delta$")
-    plt.xlabel("$\\delta$")
-    plt.ylabel("$V^{DRO}$")
+    # plt.title("$V^{DRO,\\delta}$ vs $\\delta$")
+    plt.xlabel("$\\delta_{eval}$")
+    plt.ylabel("Objective $V^{DRO}_{\\delta_{eval}}$")
     plt.legend()
-    # Add grid lines for both minor and major ticks
-    plt.grid(which="both", linestyle="--", linewidth=0.5)
+    plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+    # Major grid lines should be solid and darker grey
+    plt.grid(True, which='major', linestyle='-', linewidth=1, color='grey')
     plt.minorticks_on()
+    plt.tight_layout()
     plt.savefig("plots/dro_rewards.png")
-    plt.show()
+    plt.close()
 
 
 if __name__ == "__main__":

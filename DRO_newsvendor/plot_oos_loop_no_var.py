@@ -84,14 +84,10 @@ def get_mean_and_std(delta, no_samples):
     naive_data_mean = np.mean(naive_data_rewards)
     naive_model_mean = np.mean(naive_model_rewards)
     # Compute the variance by adding the veriance of means and mean of variances
-    data_std = np.sqrt(np.mean(np.square(data_std_rewards)) + np.var(data_rewards))
-    model_std = np.sqrt(np.mean(np.square(model_std_rewards)) + np.var(model_rewards))
-    naive_data_std = np.sqrt(
-        np.mean(np.square(naive_data_std_rewards)) + np.var(naive_data_rewards)
-    )
-    naive_model_std = np.sqrt(
-        np.mean(np.square(naive_model_std_rewards)) + np.var(naive_model_rewards)
-    )
+    data_std = np.std(data_rewards)
+    model_std = np.std(model_rewards)
+    naive_data_std = np.std(naive_data_rewards)
+    naive_model_std = np.std(naive_model_rewards)
 
     # Print the mean and std of the rewards
     print(
@@ -128,8 +124,11 @@ if __name__ == "__main__":
     import json
     import os
 
+    # Set font size
+    plt.rcParams.update({"font.size": 16})
+
     deltas = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1]
-    no_samples = 10
+    no_samples = 20
 
     data_means = []
     model_means = []
@@ -169,7 +168,7 @@ if __name__ == "__main__":
         20: -39.5
         # 50: -160.0,
     }
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(9, 5))
     plt.plot(data_stds, data_means, label="Data-based KL-DRO", marker="x")
     plt.plot(model_stds, model_means, label="Parametric KL-DRO", marker="x")
     plt.scatter(
@@ -202,12 +201,12 @@ if __name__ == "__main__":
             upper_y_limit[no_samples],
         )
     # Increase the upper limit of the y-axis by 0.5
-    plt.title(f"Out-of-sample evaluation of KL-DRO for N={no_samples}")
-    plt.xlabel("Standard deviation of the reward $\sqrt{\overline{\sigma^2}}$")
+    # plt.title(f"Out-of-sample mean reward evaluation of KL-DRO for N={no_samples}")
+    plt.xlabel("Standard deviation of the mean reward $\sqrt{\overline{\sigma^2_\mu}}$")
     plt.ylabel("Avergage mean reward $\overline{\mu}$")
     plt.legend()
     plt.grid()
     plt.tight_layout()
-    plt.savefig(f"plots/oos_evaluation_means_vs_stds_no_samples_{no_samples}.png")
+    plt.savefig(f"plots/oos_evaluation_means_vs_stdsbis_no_samples_{no_samples}.png")
     plt.show()
 

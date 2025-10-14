@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import torch
 from generate_data import generate_data
 from policy import NeuralNetworkPolicy
@@ -198,55 +197,55 @@ def optimise_policy(seed, action_costs, no_samples, generation_seed=0):
     return mean_reward, policy
 
 
-if __name__ == "__main__":
-    # Example usage
-    seed = 10
-    no_samples = 10000
-    action_costs = np.array(
-        [0.25, 0.52, 0.63, 0.39, 0.57]
-    )
+# if __name__ == "__main__":
+#     # Example usage
+#     seed = 10
+#     no_samples = 10000
+#     action_costs = np.array(
+#         [0.25, 0.52, 0.63, 0.39, 0.57]
+#     )
 
-    mean_reward, policy = optimise_policy(seed, action_costs, no_samples)
+#     mean_reward, policy = optimise_policy(seed, action_costs, no_samples)
 
-    print(f"Optimized Mean Reward: {mean_reward}")
+#     print(f"Optimized Mean Reward: {mean_reward}")
 
-    no_samples_arr = [
-        300,
-        500,
-        1000,
-        2000,
-        3000,
-        4000,
-        5000,
-        10000,
-        20000,
-        30000,
-        50000,
-        100000,
-        200000,
-        500000,
-    ]
+#     no_samples_arr = [
+#         300,
+#         500,
+#         1000,
+#         2000,
+#         3000,
+#         4000,
+#         5000,
+#         10000,
+#         20000,
+#         30000,
+#         50000,
+#         100000,
+#         200000,
+#         500000,
+#     ]
 
-    policy_evaluations = []
-    for no_samples in no_samples_arr:
-        mean_reward = true_evaluation(seed, policy, action_costs, no_samples)
-        print(f"Mean Reward: {mean_reward}")
-        policy_evaluations.append(mean_reward)
-    # Plotting the results
-    import matplotlib.pyplot as plt
-    plt.plot(
-        no_samples_arr,
-        policy_evaluations,
-        marker="o",
-    )
-    plt.xlabel("Number of Samples")
-    plt.ylabel("Mean Reward")
-    plt.title("Mean Reward vs Number of Samples")
-    plt.xscale("log")
-    plt.grid()
-    plt.show()
+#     policy_evaluations = []
+#     for no_samples in no_samples_arr:
+#         mean_reward = true_evaluation(seed, policy, action_costs, no_samples)
+#         print(f"Mean Reward: {mean_reward}")
+#         policy_evaluations.append(mean_reward)
+#     # Plotting the results
+#     import matplotlib.pyplot as plt
+#     plt.plot(
+#         no_samples_arr,
+#         policy_evaluations,
+#         marker="o",
+#     )
+#     plt.xlabel("Number of Samples")
+#     plt.ylabel("Mean Reward")
+#     plt.title("Mean Reward vs Number of Samples")
+#     plt.xscale("log")
+#     plt.grid()
+#     plt.show()
 
-    # Save the policy
-    torch.save(policy.state_dict(), "policy.pth")
-    print("Policy saved to policy.pth")
-    # Load the policy
+#     # Save the policy
+#     torch.save(policy.state_dict(), "policy.pth")
+#     print("Policy saved to policy.pth")
+#     # Load the policy

@@ -27,7 +27,7 @@ if __name__ == "__main__":
     
     result_path = "results_dro"
 
-    seeds = [0,1,2,3,4,5,6,7,8,9]
+    seeds = [1]
 
     # Initialize a dictionary to store the results
     seed_dict = {}
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     plt.semilogx(n_samples_arr, mean_error_data, label="Data-based evaluation error")
     plt.semilogx(n_samples_arr, mean_error_model, label="Parametric evaluation error")
     plt.semilogx(n_samples_arr, mean_error_true, label="True data-based evaluation error")
-    plt.xlabel("Number of Samples")
+    plt.xlabel("Number of samples")
     plt.ylabel("Mean absolute error")
     plt.title("Error convergence for standard objective")
     plt.legend()
@@ -118,7 +118,7 @@ if __name__ == "__main__":
     plt.semilogx(n_samples_arr, dro_error_data, label="Data-based evaluation error")
     plt.semilogx(n_samples_arr, dro_error_model, label="Parametric evaluation error")
     plt.semilogx(n_samples_arr, dro_error_true, label="True data-based evaluation error")
-    plt.xlabel("Number of Samples")
+    plt.xlabel("Number of samples")
     plt.ylabel("Mean absolute error")
     plt.title("Error convergence for DRO objective")
     plt.legend()

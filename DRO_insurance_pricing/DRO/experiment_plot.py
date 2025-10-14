@@ -4,7 +4,7 @@ import json
 import matplotlib.pyplot as plt
 
 # Increase the default font size for better readability
-plt.rcParams.update({'font.size': 18})
+plt.rcParams.update({'font.size': 16})
 
 
 if __name__ == "__main__":
@@ -23,10 +23,10 @@ if __name__ == "__main__":
         "robust_delta_0.1",
     ]
     labels = {
-        "standard": "standard (non-robust)",
-        "robust_delta_0.01": "robust $\\delta_{train}=0.01$",
-        "robust_delta_0.05": "robust $\\delta_{train}=0.05$",
-        "robust_delta_0.1": "robust $\\delta_{train}=0.1$",
+        "standard": "Standard (non-robust)",
+        "robust_delta_0.01": "Robust $\\delta_{train}=0.01$",
+        "robust_delta_0.05": "Robust $\\delta_{train}=0.05$",
+        "robust_delta_0.1": "Robust $\\delta_{train}=0.1$",
     }
 
     # Plot the results
@@ -50,7 +50,7 @@ if __name__ == "__main__":
             label=labels.get(prices_type, prices_type),
         )
     plt.xlabel("$\\delta_{eval}$")
-    plt.ylabel("Objective")
+    plt.ylabel("Objective $V^{DRO}_{\\delta_{eval}}$")
     # plt.title("Profit vs $\\delta_{eval}$")
     plt.legend()
     # Add both grid and minor grid

@@ -6,15 +6,16 @@ import matplotlib.pyplot as plt
 import json
 
 # Increase the default font size for better readability
-plt.rcParams.update({'font.size': 18})
-
+plt.rcParams.update({'font.size': 16})
+# Set legend font size
+plt.rcParams['legend.fontsize'] = 13
 
 
 if __name__=="__main__":
     
-    ratio = 0.1
+    ratio = 0.9
     
-    seeds = list(range(0,20)) 
+    seeds = list(range(20,30)) 
     
     deltas = [0, 0.001, 0.002, 0.003, 0.005, 0.01, 0.05]#, 0.1]
     prices_to_evaluate = [
@@ -49,8 +50,8 @@ if __name__=="__main__":
 
         # Plot the profits vs deltas for each seed
         plt.plot(deltas, profits, marker='o', label=f'Seed {seed}')
-    plt.xlabel('Optimisation Radius $\\delta_{train}$')
-    plt.ylabel('Mean Test Set Profit')
+    plt.xlabel('Optimisation radius $\\delta_{train}$')
+    plt.ylabel('Mean test set profit')
     # plt.title('Mean Profit vs $\\delta$ for 9:1 Train/Test Split')
     # Add grid with minor ticks
     plt.grid(True, which='both', linestyle='--', linewidth=0.5)
@@ -58,7 +59,7 @@ if __name__=="__main__":
     plt.grid(True, which='major', linestyle='-', linewidth=1, color='grey')
     # plt.xticks(deltas)
     plt.minorticks_on()
-    # plt.legend(loc='upper right')
+    plt.legend(loc='upper right')
     plt.tight_layout()
     # Save the plot
     plt.savefig(f'ratio_{ratio}/ratio_{ratio}_mean_profit_vs_delta_kl.png', dpi=300)

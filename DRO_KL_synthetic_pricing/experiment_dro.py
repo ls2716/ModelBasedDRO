@@ -34,7 +34,7 @@ import mbdro.optimisation_mb.learn_conversion as mb_conversion
 import matplotlib.pyplot as plt
 
 # Increase the default font size for matplotlib
-plt.rcParams.update({"font.size": 18})
+plt.rcParams.update({"font.size": 16})
 
 
 def run_single(
@@ -130,12 +130,12 @@ def run_single(
     plt.figure(figsize=(8, 5))
     # plt.title("$V^{DRO}$ vs $\\delta_{eval}$")
     plt.xlabel("$\\delta_{eval}$")
-    plt.ylabel("Objective")
+    plt.ylabel("Objective $V^{DRO}_{\\delta_{eval}}$")
     plt.plot(
         deltas,
         robust_profits_standard,
         "o-",
-        label="standard (non-robust)",
+        label="Standard (non-robust)",
     )
     for delta_mb, robust_profits in robust_profits_mb.items():
         plt.plot(
@@ -143,7 +143,7 @@ def run_single(
             robust_profits,
             "o-",
             # label="$V^{DRO,\\delta}(p^{DRO,\\varepsilon})$ for" + f" $\\varepsilon$ = {delta_mb:.3f}",
-            label="$\\delta_{train}=$" + f"{delta_mb:.3f}",
+            label="Robust $\\delta_{train}=$" + f"{delta_mb:.3f}",
         )
     plt.legend()
     # Add grid with minor ticks
@@ -153,7 +153,7 @@ def run_single(
     plt.minorticks_on()
     plt.tight_layout()
     plt.savefig(plot_path, dpi=300)
-    plt.show()
+    # plt.show()
     plt.close()
 
 

@@ -1,12 +1,12 @@
 from generate_data import generate_data
-from true_evaluation import optimise_policy
+from convergence_analysis_voting.evaluation_true import optimise_policy
 from policy import NeuralNetworkPolicy
 from evaluation_analysis import (
     apply_policy,
     evaluate_policy_model,
     evaluate_policy_data,
 )
-from true_evaluation import true_evaluation_data, true_evaluation
+from convergence_analysis_voting.evaluation_true import true_evaluation_data, true_evaluation
 
 import numpy as np
 import os

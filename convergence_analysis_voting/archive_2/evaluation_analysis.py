@@ -1,16 +1,13 @@
 from policy import NeuralNetworkPolicy
 import torch
-import pandas as pd
 import numpy as np
 
 from generate_data import generate_data
 from learn_conversion import train_model
-from true_evaluation import true_evaluation_dro, true_evaluation_data_dro
+from convergence_analysis_voting.evaluation_true import true_evaluation, true_evaluation_data
 
 
-def evaluate_policy_model_dro(
-    X, A_one_hot, labels, action_costs, actions_one_hot, delta
-):
+def evaluate_policy_model(X, A_one_hot, labels, action_costs, actions_one_hot):
     """
     Evaluate the policy model by generating synthetic data and computing statistics.
 
@@ -25,39 +22,26 @@ def evaluate_policy_model_dro(
         :, 1
     ]  # Get probabilities for the positive class
     # Compute the rewards
-    costs = np.sum(action_costs * actions_one_hot, axis=1)
-    rewards = probs - costs
-    square_rewards = probs * (1-costs)**2 + (1-probs) * costs**2
-    
+    rewards = probs - np.sum(action_costs * actions_one_hot, axis=1)
     # Compute the mean reward
     mean_reward = np.mean(rewards)
-    mean_square_reward = np.mean(square_rewards)
-
-    # Compute the variance
-    variance = mean_square_reward - mean_reward**2
-    dro_reward = mean_reward - np.sqrt(delta * variance)
     # Return the mean reward
-    return mean_reward, dro_reward
+    return mean_reward
 
-
-def evaluate_policy_data_dro(
-    X, A_one_hot, labels, action_costs, actions_one_hot, delta
-):
+def evaluate_policy_data(X, A_one_hot, labels, action_costs, actions_one_hot):
     """
     Evaluate the policy model by generating synthetic data and computing statistics.
 
     """
     rewards = labels - np.sum(action_costs * actions_one_hot, axis=1)
     # Find the indices where the action agrees with the  A_one_hot
-    indicator = np.sum(A_one_hot * actions_one_hot, axis=1) > 0.5
+    indicator = np.sum(A_one_hot * actions_one_hot, axis=1)>0.5
     # Compute the rewards only for the actions that agree
     rewards = rewards[indicator == 1]
     # Compute the mean reward
     mean_reward = np.mean(rewards)
-    variance = np.var(rewards)
-    dro_reward = mean_reward - np.sqrt(delta * variance)
     # Return the mean reward
-    return mean_reward, dro_reward
+    return mean_reward
 
 
 def apply_policy(X, policy):
@@ -83,15 +67,18 @@ def apply_policy(X, policy):
 
 if __name__ == "__main__":
     # Set the random seed for reproducibility
-    seed = 10
-    delta = 0.1
+    seed = 0 # was 10
 
     # Get the weigths
-    _, _, _, gen_dict = generate_data(parameter_seed=seed, n_samples=10, verbose=False)
+    _, _, _, gen_dict = generate_data(
+        parameter_seed=seed, n_samples=1000000, verbose=False)
     weights = gen_dict["weights"]
     bias = gen_dict["bias"]
 
-    action_costs = np.array([0.25, 0.52, 0.63, 0.39, 0.57])
+    print(f"Means: {gen_dict['mean_probs']}")
+
+    # action_costs = np.array([0.25, 0.52, 0.63, 0.39, 0.57])
+    action_costs = np.array([round(mean, 2) for mean in gen_dict["mean_probs"]])
 
     # torch.manual_seed(seed)
     # np.random.seed(seed)
@@ -108,57 +95,47 @@ if __name__ == "__main__":
     true_rewards_run = []
     no_sims = 200
 
-    n_samples_arr = [
-        300,
-        500,
-        1000,
-        2000,
-        3000,
-        5000,
-        20000,
-        50000,
-        100000,
-        200000,
-        500000,
-    ]
+    n_samples_arr = [ 300, 500, 1000, 2000, 3000, 5000, 20000, 50000, 100000, 200000, 500000]
 
     for i in range(no_sims):
-        print(f"Simulation {i + 1}/{no_sims}")
+        print(f"Simulation {i+1}/{no_sims}")
         # Generate random data
         model_rewards = []
         data_rewards = []
         true_rewards = []
-
+        
         for n_samples in n_samples_arr:
             X, A_one_hot, labels, gen_dict = generate_data(
-                parameter_seed=seed, n_samples=n_samples, verbose=False
+                parameter_seed=seed, n_samples=n_samples, verbose=False, generation_seed=i*10
             )
+
+
 
             # Evaluate the policy using model evaluation
             actions_one_hot = apply_policy(X, policy)
 
-            mean_reward_model, dro_reward_model = evaluate_policy_model_dro(
-                X, A_one_hot, labels, action_costs, actions_one_hot, delta
+            mean_reward_model = evaluate_policy_model(
+                X, A_one_hot, labels, action_costs, actions_one_hot
             )
             # print(
             #     f"Mean reward from model evaluation: {mean_reward_model}, n_samples: {n_samples}"
             # )
             # Evaluate the policy using data evaluation
-            mean_reward_data, dro_reward_data = evaluate_policy_data_dro(
-                X, A_one_hot, labels, action_costs, actions_one_hot, delta
+            mean_reward_data = evaluate_policy_data(
+                X, A_one_hot, labels, action_costs, actions_one_hot
             )
-
+            
             # print(
             #     f"Mean reward from data evaluation: {mean_reward_data}, n_samples: {n_samples}"
             # )
 
             # Evaluate the policy using true evaluation
-            mean_reward_true, dro_reward_true = true_evaluation_data_dro(
-                weights, bias, X, action_costs, actions_one_hot, delta
+            mean_reward_true = true_evaluation_data(
+                weights, bias, X, action_costs, actions_one_hot
             )
-            model_rewards.append(dro_reward_model)
-            data_rewards.append(dro_reward_data)
-            true_rewards.append(dro_reward_true)
+            model_rewards.append(mean_reward_model)
+            data_rewards.append(mean_reward_data)
+            true_rewards.append(mean_reward_true)
         model_rewards_run.append(model_rewards)
         data_rewards_run.append(data_rewards)
         true_rewards_run.append(true_rewards)
@@ -166,17 +143,16 @@ if __name__ == "__main__":
     model_rewards = np.array(model_rewards_run)
     data_rewards = np.array(data_rewards_run)
     true_rewards = np.array(true_rewards_run)
-
+    
+    
     # Evaluate the policy using true evaluation
-    mean_reward_true, dro_reward_true = true_evaluation_dro(
-        seed, policy, action_costs, no_samples=1000000, delta=delta
-    )
-    print(f"Mean reward from true evaluation: {dro_reward_true}")
+    mean_reward_true = true_evaluation(seed, policy, action_costs, no_samples=1000000)
+    print(f"Mean reward from true evaluation: {mean_reward_true}")
 
     # Compute the absolute difference between the model and data evaluation and the true evaluation
-    model_rewards_err = np.abs(model_rewards - dro_reward_true)
-    data_rewards_err = np.abs(data_rewards - dro_reward_true)
-    true_rewards_err = np.abs(true_rewards - dro_reward_true)
+    model_rewards_err = np.abs(model_rewards - mean_reward_true)
+    data_rewards_err = np.abs(data_rewards - mean_reward_true)
+    true_rewards_err = np.abs(true_rewards - mean_reward_true)
 
     # Compte the mean of the absolute difference
     model_rewards_err_mean = np.mean(model_rewards_err, axis=0)
@@ -188,53 +164,53 @@ if __name__ == "__main__":
     data_rewards_err_std = np.std(data_rewards_err, axis=0)
     true_rewards_err_std = np.std(true_rewards_err, axis=0)
 
+
+
     # Plot the aboslute difference between the model and data evaluation and the true evaluation
     import matplotlib.pyplot as plt
-
     plt.figure(figsize=(10, 5))
     plt.semilogx(
         n_samples_arr,
         model_rewards_err_mean,
         label="Model Evaluation",
     )
-    plt.fill_between(
-        n_samples_arr,
-        model_rewards_err_mean - model_rewards_err_std,
-        model_rewards_err_mean + model_rewards_err_std,
-        alpha=0.2,
-    )
+    # plt.fill_between(
+    #     n_samples_arr,
+    #     model_rewards_err_mean - model_rewards_err_std,
+    #     model_rewards_err_mean + model_rewards_err_std,
+    #     alpha=0.2,
+    # )
     plt.semilogx(
         n_samples_arr,
         data_rewards_err_mean,
         label="Data Evaluation",
     )
-    plt.fill_between(
-        n_samples_arr,
-        data_rewards_err_mean - data_rewards_err_std,
-        data_rewards_err_mean + data_rewards_err_std,
-        alpha=0.2,
-    )
+    # plt.fill_between(
+    #     n_samples_arr,
+    #     data_rewards_err_mean - data_rewards_err_std,
+    #     data_rewards_err_mean + data_rewards_err_std,
+    #     alpha=0.2,
+    # )
     plt.semilogx(
         n_samples_arr,
         true_rewards_err_mean,
         label="True Evaluation Data",
     )
-    plt.fill_between(
-        n_samples_arr,
-        true_rewards_err_mean - true_rewards_err_std,
-        true_rewards_err_mean + true_rewards_err_std,
-        alpha=0.2,
-    )
+    # plt.fill_between(
+    #     n_samples_arr,
+    #     true_rewards_err_mean - true_rewards_err_std,
+    #     true_rewards_err_mean + true_rewards_err_std,
+    #     alpha=0.2,
+    # )
     plt.xlabel("Number of Samples")
-    plt.ylabel("Absolute Difference from True DRO Evaluation ")
-    plt.title("Absolute Difference from True DRO Evaluation")
+    plt.ylabel("Absolute Difference from True Evaluation")
+    plt.title("Absolute Difference from True Evaluation")
     plt.legend()
     plt.grid()
-    plt.savefig("evaluation_analysis_err_dro.png")
+    plt.savefig("evaluation_analysis_err.png")
     plt.show()
 
-
-        # Plot the convergence of means and add std fill
+    # Plot the convergence of means and add std fill
     model_rewards_mean = np.mean(model_rewards, axis=0)
     model_rewards_std = np.std(model_rewards, axis=0)
     data_rewards_mean = np.mean(data_rewards, axis=0)
@@ -276,10 +252,9 @@ if __name__ == "__main__":
         alpha=0.2,
     )
     plt.xlabel("Number of Samples")
-    plt.ylabel("Mean DRO Reward")
-    plt.title("Mean DRO Reward vs Number of Samples")
+    plt.ylabel("Mean Reward")
+    plt.title("Mean Reward vs Number of Samples")
     plt.legend()
     plt.grid()
-    plt.savefig("evaluation_analysis_mean_dro.png")
+    plt.savefig("evaluation_analysis_mean.png")
     plt.show()
-

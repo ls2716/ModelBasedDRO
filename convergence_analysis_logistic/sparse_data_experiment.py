@@ -79,7 +79,7 @@ def run_experiment(configuration):
     # Increase the size of the font
     plt.rcParams.update({"font.size": 16})
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(8, 5))
     plt.scatter(action_space, profits, label="Data-based standard")
     plt.plot(price_range, mb_profits, label="Parametric standard")
     plt.scatter(action_space, profits_dro, label="Data-based DRO")
