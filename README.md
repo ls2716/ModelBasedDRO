@@ -5,7 +5,7 @@ This repository contains the code accompanying the paper:
 published in the *Proceedings of the 6th ACM International Conference on AI in Finance (ICAIF 2025)*.
 
 The code also supports the research presented in Chapter 2 of the PhD thesis:  
-“Algorithmic Pricing in Competitive Markets”  
+“Algorithmic Pricing in Multi-agent, Competitive Markets”  
 by Lukasz Sliwinski, 2025, University of Edinburgh.
 
 ---
