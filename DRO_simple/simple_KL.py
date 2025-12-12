@@ -157,7 +157,7 @@ if __name__ == "__main__":
     # Plot the results
     plt.figure(figsize=(8, 5))
     # plt.title("$V^{DRO}$ vs $\\delta$")
-    plt.xlabel("Optimisation Radius $\\delta_{train}$")
+    plt.xlabel("Optimisation radius $\\delta_{train}$")
     plt.ylabel("Objective")
     plt.plot(
         delta_arr,

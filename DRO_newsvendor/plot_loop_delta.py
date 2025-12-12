@@ -4,8 +4,7 @@ import numpy as np
 import json
 import os
 
-# Increase the font size for better readability
-plt.rcParams.update({"font.size": 16})
+
 
 def plot_results(results, delta_arr, delta_to_plot):
     """
@@ -16,6 +15,8 @@ def plot_results(results, delta_arr, delta_to_plot):
         delta_arr (list): List of delta values.
         delta_to_plot (float): Delta value to plot.
     """
+    # Increase the font size for better readability
+    plt.rcParams.update({"font.size": 16})
     # Create the plots directory if it doesn't exist
     if not os.path.exists("plots"):
         os.makedirs("plots")
@@ -34,7 +35,7 @@ def plot_results(results, delta_arr, delta_to_plot):
     plt.close()
 
     # Plot the dro rewards
-    plt.figure(figsize=(9, 5))
+    plt.figure(figsize=(8, 5))
     # Plot the rewards for the standard order quantity
     dro_rewards_standard = [dro_rewards[str(delta)]["0"] for delta in delta_arr]
     plt.plot(delta_arr, dro_rewards_standard, marker="o", label="Standard (non-robust)")
